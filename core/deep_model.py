@@ -2,6 +2,20 @@ from keras import Input
 from keras.layers import Conv2D, Dropout
 from keras.layers import Dense, BatchNormalization, MaxPooling2D, concatenate, Activation, GlobalAveragePooling2D
 from keras.models import Model
+from keras.layers import ReLU, ELU, LeakyReLU
+
+
+def seg_relu():
+    # code here
+    pass
+
+
+dict_activation = {
+    'relu': ReLU(),
+    'ELU': ELU(),
+    'LeakyReLU': LeakyReLU(),
+    'seg_relu': seg_relu()
+}
 
 
 def block_stem(x, filter_cnv, pool_size=(2, 2), kernel_size=5, strides=1,
@@ -32,13 +46,13 @@ def block_identity(x, filter_block, kernel_size_a=5, kernel_size_b=3, kernel_siz
 def deep_learning_model(input_shape, number_class=2, activation_dense='softmax', activation_block='relu'):
     input_layer = Input(shape=input_shape)
     x_ida = block_identity(input_layer, 32, kernel_size_a=5, kernel_size_b=3, kernel_size_c=1,
-                           activation=activation_block, name="block_identity_a")
+                           activation=dict_activation[activation_block], name="block_identity_a")
     x_idb = block_identity(x_ida, 64, kernel_size_a=5, kernel_size_b=3, kernel_size_c=1,
-                           activation=activation_block, name="block_identity_b")
+                           activation=dict_activation[activation_block], name="block_identity_b")
     x_idc = block_identity(x_idb, 128, kernel_size_a=5, kernel_size_b=3, kernel_size_c=1,
-                           activation=activation_block, name="block_identity_c")
+                           activation=dict_activation[activation_block], name="block_identity_c")
     x_concat = concatenate([x_ida, x_idb, x_idc], name="block_concat")
-    x_concat = Activation(activation_block, name="block_activation")(x_concat)
+    x_concat = Activation(dict_activation[activation_block], name="block_activation")(x_concat)
     x = GlobalAveragePooling2D()(x_concat)
     x = Dropout(0.5)(x)
     x = Dense(number_class, activation=activation_dense)(x)
