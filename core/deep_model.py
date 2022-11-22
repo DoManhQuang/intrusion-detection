@@ -1,6 +1,6 @@
 from keras import Input
 from keras.layers import Conv2D, Dropout
-from keras.layers import Dense, BatchNormalization, MaxPooling2D, concatenate, Activation, Flatten
+from keras.layers import Dense, BatchNormalization, MaxPooling2D, concatenate, Activation, GlobalAveragePooling2D
 from keras.models import Model
 
 
@@ -38,10 +38,10 @@ def deep_learning_model(input_shape, number_class=2, activation_dense='softmax',
     x_idb = block_identity(x_ida, 64, kernel_size_a=5, kernel_size_b=3, kernel_size_c=1,
                            activation=activation_block, name="block_identity_b")
     x_idc = block_identity(x_idb, 32, kernel_size_a=5, kernel_size_b=3, kernel_size_c=1,
-                           activation=activation_block, name="block_identity_b")
+                           activation=activation_block, name="block_identity_c")
     x_concat = concatenate([x_ida, x_idb, x_idc], name="block_concat")
     x_concat = Activation(activation_block, name="block_activation")(x_concat)
-    x = Flatten()(x_concat)
+    x = GlobalAveragePooling2D()(x_concat)
     x = Dropout(0.5)(x)
     x = Dense(number_class, activation=activation_dense)(x)
     return Model(inputs=input_layer, outputs=x)
