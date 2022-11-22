@@ -3,18 +3,19 @@ from keras.layers import Conv2D, Dropout
 from keras.layers import Dense, BatchNormalization, MaxPooling2D, concatenate, Activation, GlobalAveragePooling2D
 from keras.models import Model
 from keras.layers import ReLU, ELU, LeakyReLU
+from keras import backend as K
+import tensorflow as tf
 
 
-def seg_relu():
-    # code here
-    pass
+def seg_relu(x):
+    return K.switch(x > 0, x, (x/(tf.math.abs(x) + 1)))
 
 
 dict_activation = {
-    'relu': ReLU(),
-    'ELU': ELU(),
-    'LeakyReLU': LeakyReLU(),
-    'seg_relu': seg_relu()
+    'relu': ReLU,
+    'ELU': ELU,
+    'LeakyReLU': LeakyReLU,
+    'seg_relu': seg_relu
 }
 
 
