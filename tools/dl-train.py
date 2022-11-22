@@ -140,7 +140,7 @@ print("TEST : ", labels_test_one_hot.shape)
 
 model.set_weights(weights_init)
 model_history = model.fit(global_dataset_train, labels_train_one_hot, epochs=epochs, batch_size=bath_size,
-                          verbose=verbose, validation_data=(global_dataset_test, labels_test_one_hot),
+                          verbose=verbose, validation_split=0.2,
                           shuffle=True, callbacks=callbacks_list)
 print("===========Training Done !!==============")
 model_save_file = "model-" + model_name + "-" + version + ".h5"
