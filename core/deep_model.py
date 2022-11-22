@@ -5,6 +5,7 @@ from keras.models import Model
 from keras.layers import ReLU, ELU, LeakyReLU
 from keras import backend as K
 import tensorflow as tf
+from keras.utils import plot_model
 
 
 def seg_relu(x):
@@ -61,4 +62,4 @@ def deep_learning_model(input_shape, number_class=2, activation_dense='softmax',
 
 
 # model = deep_learning_model(input_shape=(13, 1, 1))
-# model.summary()
+# plot_model(model, to_file='../docs/model-deep.png', show_shapes=False)
