@@ -146,7 +146,7 @@ print("===========Training Done !!==============")
 model_save_file = "model-" + model_name + "-" + version + ".h5"
 model.save(os.path.join(training_path, 'model-save', model_save_file), save_format='h5')
 print("Save model done!!")
-scores = model.evaluate(global_dataset_test, global_labels_test, verbose=1)
+scores = model.evaluate(global_dataset_test, labels_test_one_hot, verbose=1)
 print("%s: %.2f%%" % (model.metrics_names[0], scores[0] * 100))
 print("%s: %.2f%%" % (model.metrics_names[1], scores[1] * 100))
 

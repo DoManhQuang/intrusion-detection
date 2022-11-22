@@ -45,5 +45,5 @@ def deep_learning_model(input_shape, number_class=2, activation_dense='softmax',
     return Model(inputs=input_layer, outputs=x)
 
 
-model = deep_learning_model(input_shape=(13, 1, 1))
-model.summary()
+# model = deep_learning_model(input_shape=(13, 1, 1))
+# model.summary()
