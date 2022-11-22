@@ -61,5 +61,6 @@ def deep_learning_model(input_shape, number_class=2, activation_dense='softmax',
     return Model(inputs=input_layer, outputs=x)
 
 
-# model = deep_learning_model(input_shape=(13, 1, 1))
+# model = deep_learning_model(input_shape=(13, 1, 1), number_class=4)
+# model.summary(expand_nested=True)
 # plot_model(model, to_file='../docs/model-deep.png', show_shapes=False)
