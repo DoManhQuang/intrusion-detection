@@ -105,14 +105,15 @@ def plot_model_legend(model_history):
     plt.show()
 
 
-def print_cmx(y_true, y_pred):
+def print_cmx(y_true, y_pred, save_path="./folder_save", version="v-1.0"):
     labels = sorted(list(set(y_true)))
     cmx_data = confusion_matrix(y_true, y_pred, labels=labels)
     df_cmx = pd.DataFrame(cmx_data, index=labels, columns=labels)
     plt.figure(figsize=(10, 7))
     sn.heatmap(df_cmx, annot=True, fmt='g')
     print(cmx_data)
-    plt.show()
+    # plt.show()
+    plt.savefig(os.path.join(save_path, "result-cmx" + version + ".png"))
 
 
 def save_results_to_csv(dict_results, folder_save="./results", name="predict", version="version-0.0"):
