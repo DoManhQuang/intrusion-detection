@@ -157,7 +157,7 @@ y_target = np.argmax(y_predict, axis=1)
 
 print("save results ......")
 
-print_cmx(y_true=y_true, y_pred=y_target)
+print_cmx(y_true=y_true, y_pred=y_target, save_path=result_path, version=version)
 
 file_result = model_name + version + "score.txt"
 
