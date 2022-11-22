@@ -132,24 +132,27 @@ print("Save List: ", save_list)
 print("===========Training==============")
 
 print("===Labels fit transform ===")
-train_data, valid_data, train_labels, valid_labels = train_test_split(global_labels_train, global_labels_train, test_size=0.2,
+train_data, valid_data, train_labels, valid_labels = train_test_split(global_dataset_train, global_labels_train, test_size=0.2,
                                                                       random_state=1000, shuffle=True, stratify=global_labels_train)
 lb = preprocessing.LabelBinarizer()
 labels_train_one_hot = lb.fit_transform(train_labels)
 labels_valid_one_hot = lb.fit_transform(valid_labels)
 labels_test_one_hot = lb.fit_transform(global_labels_test)
 
-print("TRAIN : ", labels_train_one_hot.shape)
-print("TEST : ", labels_test_one_hot.shape)
+print("TRAIN : ", train_data.shape, "-", labels_train_one_hot.shape)
+print("VALID : ", valid_data.shape, "-", labels_valid_one_hot.shape)
+print("TEST : ", global_dataset_test.shape, "-", labels_test_one_hot.shape)
 
 model.set_weights(weights_init)
 model_history = model.fit(train_data, labels_train_one_hot, epochs=epochs, batch_size=bath_size,
                           verbose=verbose, validation_data=(valid_data, labels_valid_one_hot),
                           shuffle=True, callbacks=callbacks_list)
 print("===========Training Done !!==============")
+
 model_save_file = "model-" + model_name + "-" + version + ".h5"
 model.save(os.path.join(training_path, 'model-save', model_save_file), save_format='h5')
 print("Save model done!!")
+
 scores = model.evaluate(global_dataset_test, labels_test_one_hot, verbose=1)
 print("%s: %.2f%%" % (model.metrics_names[0], scores[0] * 100))
 print("%s: %.2f%%" % (model.metrics_names[1], scores[1] * 100))
