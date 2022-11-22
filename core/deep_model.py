@@ -12,9 +12,9 @@ def seg_relu(x):
 
 
 dict_activation = {
-    'relu': ReLU,
-    'ELU': ELU,
-    'LeakyReLU': LeakyReLU,
+    'relu': ReLU(),
+    'ELU': ELU(),
+    'LeakyReLU': LeakyReLU(),
     'seg_relu': seg_relu
 }
 
