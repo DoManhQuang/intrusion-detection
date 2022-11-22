@@ -56,6 +56,11 @@ print("=====loading dataset ...======")
 global_dataset_train, global_labels_train = load_data(train_path)
 global_dataset_test, global_labels_test = load_data(test_path)
 
+global_dataset_train = np.array(global_dataset_train, dtype="float32")
+global_dataset_test = np.array(global_dataset_test, dtype="float32")
+global_labels_train = np.array(global_labels_train)
+global_labels_test = np.array(global_labels_test)
+
 print("TRAIN : ", global_dataset_train.shape, " - ", global_labels_train.shape)
 print("TEST : ", global_dataset_test.shape, " - ", global_labels_test.shape)
 
