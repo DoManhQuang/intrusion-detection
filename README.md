@@ -2,6 +2,9 @@
 
 Implementation of paper - (loading...)
 
+CNN architecture follow: 
+![img.png](docs/img-model.png)
+
 ## Quick Start
 ### Install lib
 ```shell
