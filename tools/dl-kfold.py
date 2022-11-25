@@ -16,9 +16,7 @@ if str(ROOT) not in sys.path:
     sys.path.append(str(ROOT))
 
 from core.utils import set_gpu_limit, load_data, save_dump, write_score, get_callbacks_list
-from core.model import model_classification, model_mobile_v2_fine_tune
-from core.custom_metrics import equal_error_rate
-from core.fas_base_01 import created_model_fas_01
+from core.deep_model import deep_learning_model
 
 
 # Parse command line arguments
@@ -37,9 +35,15 @@ parser.add_argument("-bsize", "--bath_size", default=32, type=int, help="bath si
 parser.add_argument("-verbose", "--verbose", default=1, type=int, help="verbose training")
 parser.add_argument("--mode_model", default="name-model", help="mobi-v2")
 parser.add_argument("--mode_split_data", default=False, help="is split data ? (False or True)")
+parser.add_argument("-activation_block", default="relu", help="optional relu")
+parser.add_argument("-status_ckpt", default=True, help="True or False")
+parser.add_argument("-status_early_stop", default=True, help="True or False")
 args = vars(parser.parse_args())
 
 # Set up paramet
+activation_block = args["activation_block"]
+status_ckpt = args["status_ckpt"]
+status_early_stop = args["status_early_stop"]
 mode_model = args["mode_model"]
 epochs = args["epochs"]
 bath_size = args["bath_size"]
@@ -74,18 +78,10 @@ num_classes = len(np.unique(y))
 ip_shape = X[0].shape
 
 metrics = [
-    # equal_error_rate,
-    # 'accuracy',
-    # tfa.metrics.F1Score(num_classes=1, average="micro", threshold=0.5)
-    'binary_accuracy'
+    'categorical_accuracy'
 ]
 
-dict_model = {
-    "mobi-v2": model_mobile_v2_fine_tune(input_shape=ip_shape, num_class=1, activation='sigmoid'),
-    "model-g": model_classification(input_layer=ip_shape, num_class=1, activation='sigmoid'),
-    "fas-v1": created_model_fas_01(input_shape=ip_shape, number_class=1, activation='sigmoid')
-}
-model = dict_model[mode_model]
+model = deep_learning_model(input_shape=ip_shape, number_class=num_classes, activation_dense='softmax', activation_block=activation_block)
 model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=1e-4),
               loss=tf.keras.losses.BinaryCrossentropy(),
               metrics=metrics)
@@ -145,12 +141,12 @@ for cnt_k_fold in range(continue_k_fold, number_k_fold + 1):
 
     file_ckpt_model = model_name + "-" + version + "-weights-best-k-fold-" + str(cnt_k_fold) + ".h5"
     print("file check point : ", file_ckpt_model)
-    flag_checkpoint = True
+    flag_checkpoint = status_ckpt
     # callback list
     callbacks_list, save_list = get_callbacks_list(folder_roc_cnt_k_fold,
                                                    status_tensorboard=True,
                                                    status_checkpoint=flag_checkpoint,
-                                                   status_earlystop=True,
+                                                   status_earlystop=status_early_stop,
                                                    file_ckpt=file_ckpt_model,
                                                    ckpt_monitor='val_binary_accuracy',
                                                    ckpt_mode='max',
