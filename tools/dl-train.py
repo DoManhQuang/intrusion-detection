@@ -8,7 +8,7 @@ from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 import numpy as np
 import tensorflow as tf
 from sklearn.metrics import f1_score, accuracy_score, recall_score, precision_score
-from core.utils import load_data, get_callbacks_list, set_gpu_limit, write_score, print_cmx
+from core.utils import load_data, get_callbacks_list, set_gpu_limit, write_score, print_cmx, plot_model_history
 from core.deep_model import deep_learning_model
 from sklearn.model_selection import train_test_split
 
@@ -28,11 +28,13 @@ parser.add_argument("-test", "--test_data_path", default="../dataset/train/data-
 parser.add_argument("-name", "--name_model", default="model_ai_name", help="model name")
 parser.add_argument("--mode_model", default="name-model", help="mobi-v2")
 parser.add_argument("-activation_block", default="relu", help="optional relu")
-parser.add_argument("-status_ckpt", default=True, help="True or False")
-parser.add_argument("-status_early_stop", default=True, help="True or False")
+parser.add_argument("-status_ckpt", default=True, type=bool, help="True or False")
+parser.add_argument("-status_early_stop", default=True, type=bool, help="True or False")
+parser.add_argument("-test_size", default=0.2, type=float, help="split data train")
 args = vars(parser.parse_args())
 
 # Set up parameters
+test_size = args["test_size"]
 status_ckpt = args["status_ckpt"]
 status_early_stop = args["status_early_stop"]
 activation_block = args["activation_block"]
@@ -50,6 +52,9 @@ model_name = args["name_model"]
 mode_model = args["mode_model"]
 
 print("=========Start=========")
+
+print("activation_block : ", activation_block)
+
 if gpu_memory > 0:
     set_gpu_limit(int(gpu_memory))  # set GPU
 
@@ -124,15 +129,14 @@ callbacks_list, save_list = get_callbacks_list(training_path,
                                                ckpt_mode='max',
                                                early_stop_monitor="val_loss",
                                                early_stop_mode="min",
-                                               early_stop_patience=10
+                                               early_stop_patience=20
                                                )
 print("Callbacks List: ", callbacks_list)
 print("Save List: ", save_list)
 
 print("===========Training==============")
-
 print("===Labels fit transform ===")
-train_data, valid_data, train_labels, valid_labels = train_test_split(global_dataset_train, global_labels_train, test_size=0.2,
+train_data, valid_data, train_labels, valid_labels = train_test_split(global_dataset_train, global_labels_train, test_size=test_size,
                                                                       random_state=1000, shuffle=True, stratify=global_labels_train)
 lb = preprocessing.LabelBinarizer()
 labels_train_one_hot = lb.fit_transform(train_labels)
@@ -163,7 +167,6 @@ y_true = np.argmax(labels_test_one_hot, axis=1)
 y_target = np.argmax(y_predict, axis=1)
 
 print("save results ......")
-
 print_cmx(y_true=y_true, y_pred=y_target, save_path=result_path, version=version)
 
 file_result = model_name + version + "score.txt"
@@ -180,6 +183,11 @@ write_score(path=os.path.join(result_path, file_result),
                             accuracy_score(y_true, y_target),
                             recall_score(y_true, y_target, average='weighted'),
                             precision_score(y_true, y_target, average='weighted')], decimals=4))
+
+# # load best check point
+# model.load_weights(training_path + "/checkpt/" + file_ckpt_model)
+# # evaluate the model
+# scores = model.evaluate(X_test, y_test, verbose=verbose)
 
 print("save results done!!")
 print("History training loading ...")
