@@ -40,7 +40,8 @@ def get_callbacks_list(diractory,
     if status_earlystop:
         # Early Stopping
         callback_early_stop = tf.keras.callbacks.EarlyStopping(monitor=early_stop_monitor, patience=early_stop_patience,
-                                                               restore_best_weights=True, mode=early_stop_mode, verbose=1)
+                                                               restore_best_weights=True, mode=early_stop_mode,
+                                                               verbose=1, min_delta=1e-4)
         callbacks_list.append(callback_early_stop)
 
     # create checkpoint
@@ -68,7 +69,7 @@ def get_callbacks_list(diractory,
     return callbacks_list, save_path
 
 
-def plot_model_history(model_history, acc='accuracy', val_acc='val_accuracy'):
+def plot_model_history(model_history, save_path, version, acc='accuracy', val_acc='val_accuracy'):
     fig, axs = plt.subplots(1, 2, figsize=(15, 5))
     axs[0].plot(range(1, len(model_history.history[acc]) + 1), model_history.history[acc])
     axs[0].plot(range(1, len(model_history.history[val_acc]) + 1), model_history.history[val_acc])
@@ -84,7 +85,8 @@ def plot_model_history(model_history, acc='accuracy', val_acc='val_accuracy'):
     axs[1].set_xlabel('Epoch')
     axs[1].set_xticks(np.arange(1, len(model_history.history['loss']) + 1), len(model_history.history['loss']) / 10)
     axs[1].legend(['train', 'val'], loc='best')
-    plt.show()
+    # plt.show()
+    plt.savefig(os.path.join(save_path, "result-cmx" + version + ".png"))
 
 
 def plot_model_legend(model_history):

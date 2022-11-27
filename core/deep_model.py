@@ -47,11 +47,11 @@ def block_identity(x, filter_block, kernel_size_a=5, kernel_size_b=3, kernel_siz
 
 def deep_learning_model(input_shape, number_class=2, activation_dense='softmax', activation_block='relu'):
     input_layer = Input(shape=input_shape)
-    x_ida = block_identity(input_layer, 32, kernel_size_a=5, kernel_size_b=3, kernel_size_c=1,
+    x_ida = block_identity(input_layer, 16, kernel_size_a=5, kernel_size_b=3, kernel_size_c=1,
                            activation=dict_activation[activation_block], name="block_identity_a")
-    x_idb = block_identity(x_ida, 64, kernel_size_a=5, kernel_size_b=3, kernel_size_c=1,
+    x_idb = block_identity(x_ida, 32, kernel_size_a=5, kernel_size_b=3, kernel_size_c=1,
                            activation=dict_activation[activation_block], name="block_identity_b")
-    x_idc = block_identity(x_idb, 128, kernel_size_a=5, kernel_size_b=3, kernel_size_c=1,
+    x_idc = block_identity(x_idb, 64, kernel_size_a=5, kernel_size_b=3, kernel_size_c=1,
                            activation=dict_activation[activation_block], name="block_identity_c")
     x_concat = concatenate([x_ida, x_idb, x_idc], name="block_concat")
     x_concat = Activation(dict_activation[activation_block], name="block_activation")(x_concat)

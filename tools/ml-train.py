@@ -1,4 +1,5 @@
 import os
+import pickle
 import sys
 ROOT = os.getcwd()
 if str(ROOT) not in sys.path:
@@ -13,7 +14,7 @@ from core.machine_model import dict_machine_model
 # # Parse command line arguments
 parser = ArgumentParser(formatter_class=ArgumentDefaultsHelpFormatter)
 parser.add_argument("-v", "--version", default="version-0.2", help="version running")
-parser.add_argument("-rp", "--result_path", default="../runs/results", help="path result ")
+parser.add_argument("-rp", "--result_path", default="../runs/results", help="path result")
 parser.add_argument("-tp", "--training_path", default="../runs/training", help="path training model")
 parser.add_argument("-train", "--train_data_path", default="../dataset/train/data-300x100-5-v1-train.data", help="data training")
 parser.add_argument("-val", "--val_data_path", default="../dataset/train/data-valid.data", help="data val")
@@ -82,6 +83,12 @@ if not os.path.exists(result_path):
 # training
 print("===========Training ...==============")
 model = model.fit(global_dataset_train, global_labels_train)
+
+# save the model to disk
+print("===========Save model ...==============")
+file_save = os.path.join(os.path.join(training_path, 'model-save'), f'{model_name}-{version}.sav')
+pickle.dump(model, open(file_save, 'wb'))
+print("===========Save model done==============")
 print("===========Training Done !!==============")
 
 
