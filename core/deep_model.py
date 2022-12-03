@@ -9,7 +9,7 @@ from keras.utils import plot_model
 
 
 def seg_relu(x):
-    return K.switch(x > 0, x, (x/(tf.math.abs(x) + 1)))
+    return K.switch(x > 0, x, K.softsign(x))
 
 
 dict_activation = {
