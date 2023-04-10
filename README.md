@@ -1,6 +1,6 @@
 ## HaUI Intrusion Detection
 
-Implementation of paper - (loading...)
+Paper - https://ieeexplore.ieee.org/document/10079326
 
 CNN architecture follow: 
 ![img.png](docs/img-model.png)
@@ -52,3 +52,15 @@ python tools/ml-train.py -v "ml-tree-norm-v1" \
     │   ├── LICENSE
     │   ├── README.md
 
+### Cite
+```
+@INPROCEEDINGS{10079326,
+  author={Vu, Viet-Thang and Thi, Thanh Quyen Bui and Gan, Hong-Seng and Vu, Viet-Vu and Quang, Do Manh and Duc, Vu Thanh and Pham, Dinh-Lam},
+  booktitle={2023 25th International Conference on Advanced Communication Technology (ICACT)}, 
+  title={Activation functions for deep learning: an application for rare attack detection in wireless local area network (WLAN)}, 
+  year={2023},
+  volume={},
+  number={},
+  pages={59-64},
+  doi={10.23919/ICACT56868.2023.10079326}}
+```
